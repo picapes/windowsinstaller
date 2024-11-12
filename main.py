@@ -8,7 +8,7 @@ import tempfile
 
 hosts_path = "C:/Windows/System32/drivers/etc/hosts"
 discord = "https://picapes.github.io/discord"
-server = "127.0.0.1" #Server not available yet.
+server = "5.181.178.42"
 
 def read_hosts():
     with open(hosts_path, 'r') as file:
