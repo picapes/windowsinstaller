@@ -1,6 +1,7 @@
+# Copyright (C) PiCapes - All Rights Reserved
 import os
 import tkinter as tk
-from tkinter import PhotoImage, messagebox, StringVar
+from tkinter import PhotoImage, messagebox
 import webbrowser
 from PIL import Image, ImageTk
 import base64
@@ -9,8 +10,13 @@ import tempfile
 hosts_path = "C:/Windows/System32/drivers/etc/hosts"
 discord = "https://picapes.github.io/discord"
 server = "5.181.178.42"
+version = 'v1'
 
 def read_hosts():
+    if not os.path.exists(hosts_path):
+        with open(hosts_path, 'w') as file:
+            file.write("# Hosts file created by PiCapes installer because there was none.\n")
+    
     with open(hosts_path, 'r') as file:
         return file.readlines()
 
@@ -18,42 +24,42 @@ def write_hosts(lines):
     with open(hosts_path, 'w') as file:
         file.writelines(lines)
 
-def install_action(canvas, statustext, statustext_label):
+def show_status(canvas, message, color):
+    canvas.delete("status_text") 
+    canvas.create_text(490, 445, text=message, fill=color, font=("Arial", 12), tags="status_text")
+
+def install_action(canvas):
     try:
         lines = read_hosts()
         new_lines = [line for line in lines if "s.optifine.net" not in line and "s-optifine.lunarclientcdn.com" not in line]
         new_lines.insert(0, f"{server} s.optifine.net s-optifine.lunarclientcdn.com\n")
         write_hosts(new_lines)
-        #os.system("ipconfig /flushdns")
-        statustext.set("Installed Successfully.")
-        canvas.itemconfigure(statustext_label, text="Installed Successfully.", fill="green")
+        show_status(canvas, "Installed Successfully.", "green")
+    except PermissionError:
+        show_status(canvas, "Access denied. Run as Administrator.", "red")
+        messagebox.showerror("Error", "Access denied. Please run the application as an administrator.")
     except Exception as e:
-        statustext.set("Access denied.")
-        canvas.itemconfigure(statustext_label, text="Access denied.", fill="red")
+        show_status(canvas, "Error occurred.", "red")
         messagebox.showerror("Error", str(e))
 
-def uninstall_action(canvas, statustext, statustext_label):
+def uninstall_action(canvas):
     try:
         lines = read_hosts()
         new_lines = [line for line in lines if "s.optifine.net" not in line and "s-optifine.lunarclientcdn.com" not in line]
         write_hosts(new_lines)
-        #os.system("ipconfig /flushdns")
-        statustext.set("Uninstalled Successfully.")
-        canvas.itemconfigure(statustext_label, text="Uninstalled Successfully.", fill="red")
+        show_status(canvas, "Uninstalled Successfully.", "red")
+    except PermissionError:
+        show_status(canvas, "Access denied. Run as Administrator.", "red")
+        messagebox.showerror("Error", "Access denied. Please run the application as an administrator.")
     except Exception as e:
-        statustext.set("Access denied.")
-        canvas.itemconfigure(statustext_label, text="Access denied.", fill="red")
+        show_status(canvas, "Error occurred.", "red")
         messagebox.showerror("Error", str(e))
 
 def discord_action():
     webbrowser.open(discord)
 
 def create_fixed_size_window():
-    global statustext_label
-    global statustext
     global canvas
-
-    # Decode base64 images and save them to temporary files
     with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as bg_file:
         bg_file.write(base64.b64decode(background_img))
         bg_file_path = bg_file.name
@@ -63,7 +69,7 @@ def create_fixed_size_window():
         icon_file_path = icon_file.name
     
     window = tk.Tk()
-    window.title("PiCapes Installer - v1")
+    window.title(f"PiCapes Installer - {version}")
     window.geometry("981x457")
     window.resizable(False, False)
     
@@ -73,13 +79,7 @@ def create_fixed_size_window():
     canvas.create_image(0, 0, anchor=tk.NW, image=bg_image)
     
     window.iconbitmap(icon_file_path)
-    
-    transparent_image = Image.new("RGBA", (1, 1), (255, 255, 255, 0))
-    transparent_bg = ImageTk.PhotoImage(transparent_image)
-    
-    statustext = StringVar()
-    statustext_label = canvas.create_text(490, 445, text="", font=("Arial", 12), fill="white", anchor=tk.CENTER)  # Changed anchor to CENTER
-    
+
     button_style = {
         "font": ("Arial", 12),
         "bg": "#4CAF50",
@@ -91,7 +91,7 @@ def create_fixed_size_window():
         "height": 2
     }
     
-    install_button = tk.Button(window, text="Install", command=lambda: install_action(canvas, statustext, statustext_label), **button_style)
+    install_button = tk.Button(window, text="Install", command=lambda: install_action(canvas), **button_style)
     install_button.place(relx=0.2, rely=0.9, anchor=tk.CENTER)
     
     discord_button_style = button_style.copy()
@@ -101,7 +101,7 @@ def create_fixed_size_window():
     
     uninstall_button_style = button_style.copy()
     uninstall_button_style["bg"] = "#f44336"
-    uninstall_button = tk.Button(window, text="Uninstall", command=lambda: uninstall_action(canvas, statustext, statustext_label), **uninstall_button_style)
+    uninstall_button = tk.Button(window, text="Uninstall", command=lambda: uninstall_action(canvas), **uninstall_button_style)
     uninstall_button.place(relx=0.8, rely=0.9, anchor=tk.CENTER)
     
     window.mainloop()
