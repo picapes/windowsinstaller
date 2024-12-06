@@ -10,7 +10,7 @@ import tempfile
 hosts_path = "C:/Windows/System32/drivers/etc/hosts"
 discord = "https://picapes.github.io/discord"
 server = "5.181.178.42"
-version = 'v1'
+version = 'v1.0.1'
 
 def read_hosts():
     if not os.path.exists(hosts_path):
