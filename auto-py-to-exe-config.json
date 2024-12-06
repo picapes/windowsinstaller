@@ -59,10 +59,6 @@
   },
   {
    "optionDest": "hiddenimports",
-   "value": "Pillow"
-  },
-  {
-   "optionDest": "hiddenimports",
    "value": "tkinter"
   },
   {
