@@ -3,7 +3,6 @@ import os
 import tkinter as tk
 from tkinter import PhotoImage, messagebox
 import webbrowser
-from PIL import Image, ImageTk
 import base64
 import tempfile
 
