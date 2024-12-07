@@ -6,7 +6,9 @@ import webbrowser
 import base64
 import tempfile
 
-hosts_path = "C:/Windows/System32/drivers/etc/hosts"
+system32_path = os.path.join(os.environ['SystemRoot'], 'System32')
+hosts_path = os.path.join(system32_path, 'drivers', 'etc', 'hosts')
+
 discord = "https://picapes.github.io/discord"
 server = "5.181.178.42"
 version = 'v1.0.1'
