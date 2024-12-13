@@ -10,8 +10,8 @@ system32_path = os.path.join(os.environ['SystemRoot'], 'System32')
 hosts_path = os.path.join(system32_path, 'drivers', 'etc', 'hosts')
 
 discord = "https://picapes.github.io/discord"
-server = "5.181.178.42"
-version = 'v1.0.1'
+server = "37.202.206.42"
+version = 'v1.0.2'
 
 def read_hosts():
     if not os.path.exists(hosts_path):
