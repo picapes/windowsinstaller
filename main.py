@@ -13,6 +13,8 @@ discord = "https://picapes.github.io/discord"
 server = "37.202.206.42"
 version = 'v1.0.2'
 
+# This installer script modifies the hosts file to redirect "s.optifine.net" to our custom server, enabling the use of custom capes managed by PiCapes.
+
 def read_hosts():
     if not os.path.exists(hosts_path):
         with open(hosts_path, 'w') as file:
