@@ -11,7 +11,7 @@ hosts_path = os.path.join(system32_path, 'drivers', 'etc', 'hosts')
 
 discord = "https://picapes.github.io/discord"
 server = "37.202.206.42"
-version = 'v1.0.2'
+version = 'v1.0.3'
 
 # This installer script modifies the hosts file to redirect "s.optifine.net" to our custom server, enabling the use of custom capes managed by PiCapes.
 
@@ -35,7 +35,7 @@ def install_action(canvas):
     try:
         lines = read_hosts()
         new_lines = [line for line in lines if "s.optifine.net" not in line and "s-optifine.lunarclientcdn.com" not in line]
-        new_lines.insert(0, f"{server} s.optifine.net s-optifine.lunarclientcdn.com #Added by PiCapes Installer\n")
+        new_lines.insert(0, f"{server} s.optifine.net #Added by PiCapes Installer\n")
         write_hosts(new_lines)
         show_status(canvas, "Installed Successfully.", "green")
     except PermissionError:
